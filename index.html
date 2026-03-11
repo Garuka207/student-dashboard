@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>School Dashboard</title>
+
+<style>
+
+body{
+    font-family:Arial;
+}
+
+button{
+    margin-left:40px;
+    margin-bottom:20px;
+    cursor:pointer;
+    padding:10px;
+}
+
+.section{
+    margin:40px;
+}
+
+table{
+    border-collapse:collapse;
+}
+
+td, th{
+    border:1px solid #ccc;
+    padding:8px;
+    text-align:center;
+}
+
+input{
+    min-width:80px;
+    width:auto;
+    border:none;
+    background:transparent;
+    text-align:center;
+}
+
+/* Column colours */
+
+th:nth-child(1), td:nth-child(1){
+    background-color:#f5f5f5;
+}
+
+th:nth-child(2), td:nth-child(2){
+    background-color:#e8f4ff;
+}
+
+th:nth-child(3), td:nth-child(3){
+    background-color:#e9ffe8;
+}
+
+th:nth-child(4), td:nth-child(4){
+    background-color:#fff6e6;
+}
+
+th:nth-child(5), td:nth-child(5){
+    background-color:#f3e8ff;
+}
+
+th:nth-child(6), td:nth-child(6){
+    background-color:#ffe8f0;
+}
+
+/* row shading */
+
+tr:nth-child(even){
+    filter:brightness(0.97);
+}
+
+button {
+    border-width: 20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1 style="margin-left:40px;">School Dashboard</h1>
+
+<a href="https://classroom.google.com/c/ODQwMDY3OTQzMTc1"><button>Room 14</button></a>
+<a href="https://classroom.google.com/c/ODQxNDc3NjI0MTc2"><button>Food Tech</button></a>
+<a href="https://school-dictionary.lovable.app/"><button>Dictionary</button></a>
+<a href="https://www.prodigygame.com/main-en"><button>Prodigy</button></a>
+<a href="https://docs.google.com/document/d/1yJeqsBHivh4Hu1tNO-FtPeeZowIoTb0-QdQYow4NLYg/edit"><button>Notices</button></a>
+<a href="https://mri.school.nz/"><button>School</button></a>
+<a href="https://docs.google.com/document/d/18YPBkRpDAD586dlAjqapbV6fk9TgQQ8zaODRa2Cn8kA/edit"><button>Reading Activity</button></a>
+<a href="https://play.blooket.com/play"><button>Blooket</button></a>
+<a href="https://mail.google.com/mail/u/0/#inbox"><button>Gmail</button></a>
+<a href="https://drive.google.com/drive/home"><button>Drive</button></a>
+<a href="https://shelver.mrs-lodges-library.com/"><button>Library Game</button></a>
+<a href="https://app.mysmartlab.com.au/Account/Login"><button>Smart Lab</button></a>
+
+
+<div class="section">
+
+<h2>Weekly Timetable</h2>
+
+<table>
+
+<tr>
+<th>Time</th>
+<th>Monday</th>
+<th>Tuesday</th>
+<th>Wednesday</th>
+<th>Thursday</th>
+<th>Friday</th>
+</tr>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+
+<br>
+
+<button onclick="saveTable()">Save Timetable</button>
+<button onclick="resetTable()">Reset Timetable</button>
+
+</div>
+
+
+<script>
+
+const rows = 8;
+const cols = 6;
+
+function createTable(){
+
+const body = document.getElementById("tableBody");
+
+for(let r=0;r<rows;r++){
+
+let row = document.createElement("tr");
+
+for(let c=0;c<cols;c++){
+
+let cell = document.createElement("td");
+let input = document.createElement("input");
+
+input.id = "cell-"+r+"-"+c;
+
+/* auto expand input */
+input.addEventListener("input", function(){
+this.style.width = (this.value.length + 2) + "ch";
+});
+
+cell.appendChild(input);
+row.appendChild(cell);
+
+}
+
+body.appendChild(row);
+
+}
+
+}
+
+function saveTable(){
+
+let data = {};
+
+for(let r=0;r<rows;r++){
+for(let c=0;c<cols;c++){
+
+let id = "cell-"+r+"-"+c;
+data[id] = document.getElementById(id).value;
+
+}
+}
+
+localStorage.setItem("timetable", JSON.stringify(data));
+
+alert("Timetable saved!");
+
+}
+
+function loadTable(){
+
+const saved = JSON.parse(localStorage.getItem("timetable"));
+
+if(!saved) return;
+
+for(let r=0;r<rows;r++){
+for(let c=0;c<cols;c++){
+
+let id = "cell-"+r+"-"+c;
+
+if(saved[id]){
+document.getElementById(id).value = saved[id];
+document.getElementById(id).style.width =
+(saved[id].length + 2) + "ch";
+}
+
+}
+}
+
+}
+
+function resetTable(){
+
+let confirmReset = confirm("Are you sure you want to reset the timetable? This will delete everything.");
+
+if(confirmReset){
+
+localStorage.removeItem("timetable");
+
+for(let r=0;r<rows;r++){
+for(let c=0;c<cols;c++){
+
+let id = "cell-"+r+"-"+c;
+document.getElementById(id).value = "";
+document.getElementById(id).style.width = "80px";
+
+}
+}
+
+alert("Timetable reset.");
+
+}
+
+}
+
+createTable();
+loadTable();
+
+</script>
+
+</body>
+</html>
