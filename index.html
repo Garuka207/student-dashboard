@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +39,7 @@ input{
     text-align:center;
 }
 
-/* Column colours */
+/* column colours */
 
 th:nth-child(1), td:nth-child(1){
     background-color:#f5f5f5;
@@ -64,14 +65,8 @@ th:nth-child(6), td:nth-child(6){
     background-color:#ffe8f0;
 }
 
-/* row shading */
-
 tr:nth-child(even){
     filter:brightness(0.97);
-}
-
-button {
-    border-width: 20px;
 }
 
 </style>
@@ -122,10 +117,40 @@ button {
 </div>
 
 
+<div class="section">
+
+<h2>Login Information</h2>
+
+<table>
+
+<tr>
+<th>Website</th>
+<th>Username</th>
+<th>Password / Hint</th>
+</tr>
+
+<tr>
+<td><input id="site"></td>
+<td><input id="username"></td>
+<td><input id="password"></td>
+</tr>
+
+</table>
+
+<br>
+
+<button onclick="saveLogin()">Save Login</button>
+<button onclick="clearLogin()">Reset Login</button>
+
+</div>
+
+
 <script>
 
 const rows = 8;
 const cols = 6;
+
+/* CREATE TIMETABLE */
 
 function createTable(){
 
@@ -142,7 +167,8 @@ let input = document.createElement("input");
 
 input.id = "cell-"+r+"-"+c;
 
-/* auto expand input */
+/* auto expand */
+
 input.addEventListener("input", function(){
 this.style.width = (this.value.length + 2) + "ch";
 });
@@ -157,6 +183,9 @@ body.appendChild(row);
 }
 
 }
+
+
+/* SAVE TIMETABLE */
 
 function saveTable(){
 
@@ -176,6 +205,9 @@ localStorage.setItem("timetable", JSON.stringify(data));
 alert("Timetable saved!");
 
 }
+
+
+/* LOAD TIMETABLE */
 
 function loadTable(){
 
@@ -199,9 +231,12 @@ document.getElementById(id).style.width =
 
 }
 
+
+/* RESET TIMETABLE */
+
 function resetTable(){
 
-let confirmReset = confirm("Are you sure you want to reset the timetable? This will delete everything.");
+let confirmReset = confirm("Are you sure you want to reset the timetable?");
 
 if(confirmReset){
 
@@ -223,10 +258,64 @@ alert("Timetable reset.");
 
 }
 
+
+/* SAVE LOGIN */
+
+function saveLogin(){
+
+const loginData = {
+site: document.getElementById("site").value,
+username: document.getElementById("username").value,
+password: document.getElementById("password").value
+};
+
+localStorage.setItem("loginInfo", JSON.stringify(loginData));
+
+alert("Login saved!");
+
+}
+
+
+/* LOAD LOGIN */
+
+function loadLogin(){
+
+const saved = JSON.parse(localStorage.getItem("loginInfo"));
+
+if(!saved) return;
+
+document.getElementById("site").value = saved.site || "";
+document.getElementById("username").value = saved.username || "";
+document.getElementById("password").value = saved.password || "";
+
+}
+
+
+/* RESET LOGIN */
+
+function clearLogin(){
+
+let confirmReset = confirm("Delete saved login info?");
+
+if(confirmReset){
+
+localStorage.removeItem("loginInfo");
+
+document.getElementById("site").value = "";
+document.getElementById("username").value = "";
+document.getElementById("password").value = "";
+
+}
+
+}
+
+
 createTable();
 loadTable();
+loadLogin();
 
 </script>
 
 </body>
 </html>
+```
